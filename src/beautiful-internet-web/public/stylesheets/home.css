@@ -1,0 +1,17 @@
+.site-title {
+    display: flex;
+    flex-direction: column;
+    grid-column: 2 / 3;
+    align-items: center;
+}
+
+.site-title h1{
+    background-color: #0d47a1;
+    color: #f5f5f5;
+    margin: 0.3em;
+    padding: 0.2em 0.2em;
+}
+
+.site-title p{
+    margin: 0;
+}

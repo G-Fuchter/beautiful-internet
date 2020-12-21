@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/forms.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <%- include("../includes/navbar.ejs") %>
+    <main class="main-grid">
+      <div class="main-column">
+        <form action="/posts/add-post" method="POST" class="post-form">
+          <div class="form-control">
+            <label for="title">Website's name: </label>
+            <input type="text" name="title" id="title" required />
+          </div>
+          <div class="form-control">
+            <label for="url">Website's URL: </label>
+            <input type="text" name="url" id="url" required />
+          </div>
+          <div class="form-control">
+            <label for="imageUrl">Website's image: </label>
+            <input type="text" name="imageUrl" id="imageUrl" required />
+          </div>
+          <div class="form-control">
+            <label for="description">Website's description: </label>
+            <textarea name="description" id="description" required></textarea>
+          </div>
+          <button class="btn" type="submit">Save</button>
+        </form>
+      </div>
+    </main>
+  </body>
+</html>

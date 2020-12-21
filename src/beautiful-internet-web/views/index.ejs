@@ -2,10 +2,35 @@
 <html>
   <head>
     <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <link rel="stylesheet" href="/stylesheets/home.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <%- include("./includes/navbar.ejs") %>
+    <main class="main-flex">
+      <div class="site-title">
+        <h1>Beautiful Internet</h1>
+        <p>a place to share beautiful websites</p>
+      </div>
+      <div class="posts-showcase">
+        <h2>Popular Websites:</h2>
+        <% for (var post of popularPosts) { %>
+          <div  class="post-card">
+            <a href="<%= post.url %>">
+              <img src="<%= post.imageUrl %>" alt="<%= post.title %>" >
+            </a>
+            <div class="post-details">
+              <h4><%= post.title %></h4>
+              <p><%= post.votes %></p>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </main>
   </body>
 </html>
