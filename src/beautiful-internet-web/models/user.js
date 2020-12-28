@@ -19,6 +19,16 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
+  voteHistory: [
+    {
+      postId: {
+        type: Schema.Types.ObjectId,
+        ref: "Post",
+        required: true
+      },
+      voteValue: Number
+    }
+  ]
 });
 
 module.exports = mongoose.model("User", userSchema);
