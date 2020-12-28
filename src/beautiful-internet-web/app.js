@@ -5,6 +5,8 @@ const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const session = require("express-session");
+const MongoDBStore = require("connect-mongodb-session")(session);
 
 const User = require("./models/user");
 const homeRouter = require("./routes/home");
@@ -15,6 +17,10 @@ const postsRouter = require("./routes/posts");
 const secrets = require("./config/secrets.json");
 
 var app = express();
+const store = new MongoDBStore({
+  uri: secrets.mongoDb.URI,
+  collection: "sessions",
+});
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -25,6 +31,32 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  session({
+    secret: secrets.sessions.secret,
+    resave: false,
+    saveUninitialized: false,
+    store: store,
+  })
+);
+
+app.use((req, res, next) => {
+  if (!req.session.user) {
+    return next();
+  }
+  User.findById(req.session.user._id)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
+
+app.use((req, res, next) => {
+  res.locals.isLoggedIn = req.session.user !== undefined;
+  //res.locals.csrfToken = req.csrfToken(); TODO: 
+  next();
+})
 
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
@@ -54,7 +86,7 @@ mongoose.connect(secrets.mongoDb.URI).then((result) => {
           email: "gpfuchter@test.com",
           name: "Guille",
           password: hashedPassword,
-          votes: 0
+          votes: 0,
         });
         newUser.save();
       });
