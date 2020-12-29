@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const session = require("express-session");
 const MongoDBStore = require("connect-mongodb-session")(session);
+const csrf = require("csurf");
 
 const User = require("./models/user");
 const homeRouter = require("./routes/home");
@@ -21,6 +22,7 @@ const store = new MongoDBStore({
   uri: secrets.mongoDb.URI,
   collection: "sessions",
 });
+const csrfProtection = csrf();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -39,6 +41,7 @@ app.use(
     store: store,
   })
 );
+app.use(csrfProtection);
 
 app.use((req, res, next) => {
   if (!req.session.user) {
@@ -54,9 +57,9 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   res.locals.isLoggedIn = req.session.user !== undefined;
-  //res.locals.csrfToken = req.csrfToken(); TODO: 
+  res.locals.csrfToken = req.csrfToken();
   next();
-})
+});
 
 app.use("/", homeRouter);
 app.use("/users", usersRouter);
