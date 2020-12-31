@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const { validationResult } = require("express-validator");
 
 const User = require("../models/user");
 
@@ -41,6 +42,7 @@ exports.postLoginUser = (req, res, next) => {
 
 exports.postRegisterUser = (req, res, next) => {
   const { name, email, password } = req.body;
+  const errors = validationResult(req);
 
   User.findOne({ email })
     .then((existingUser) => {

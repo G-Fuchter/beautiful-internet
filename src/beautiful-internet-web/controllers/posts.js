@@ -1,3 +1,5 @@
+const { validationResult } = require("express-validator");
+
 const Post = require("../models/post");
 
 exports.getAddPost = (req, res, next) => {
@@ -6,6 +8,7 @@ exports.getAddPost = (req, res, next) => {
 
 exports.postAddPost = (req, res, next) => {
   const { title, url, imageUrl, description } = req.body;
+  const errors = validationResult(req);
   const post = new Post({
     title,
     url,
