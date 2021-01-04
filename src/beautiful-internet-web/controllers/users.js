@@ -6,6 +6,8 @@ const User = require("../models/user");
 exports.getRegisterUser = (req, res, next) => {
   res.render("user/register", {
     title: "Register",
+    oldInput: null,
+    errorMessages: [],
   });
 };
 
@@ -37,12 +39,20 @@ exports.postLoginUser = (req, res, next) => {
     .catch((err) => {
       console.log(err);
     });
-
 };
 
 exports.postRegisterUser = (req, res, next) => {
   const { name, email, password } = req.body;
   const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    let oldInput = { name, email };
+    let errorMessages = errors.array().map((x) => x.msg);
+    return res.status(422).render("user/register", {
+      title: "Register",
+      oldInput,
+      errorMessages,
+    });
+  }
 
   User.findOne({ email })
     .then((existingUser) => {

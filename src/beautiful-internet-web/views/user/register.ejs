@@ -14,14 +14,15 @@
     <%- include("../includes/navbar.ejs") %>
     <main class="main-grid">
       <div class="main-column">
+        <%- include("../includes/error-messages.ejs", errorMessages) %>
         <form action="/users/register" method="POST" class="post-form">
           <div class="form-control">
             <label for="email">Email </label>
-            <input type="text" name="email" id="email" required />
+            <input type="text" name="email" id="email" value="<%= oldInput?.email ?? '' %>" required />
           </div>
           <div class="form-control">
             <label for="name">Username: </label>
-            <input type="text" name="name" id="name" required />
+            <input type="text" name="name" id="name" value="<%= oldInput?.name ?? '' %>" required />
           </div>
           <div class="form-control">
             <label for="password">Password </label>

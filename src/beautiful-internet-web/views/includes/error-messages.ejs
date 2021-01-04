@@ -1,0 +1,9 @@
+<div class="errors">
+  <ul class="errors__ul">
+    <% if (errorMessages.length > 0) { 
+        for (var msg of errorMessages) { %>
+          <li class="errors__li"><%= msg %></li>
+        <% }
+      } %>
+  </ul>
+</div>

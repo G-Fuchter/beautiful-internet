@@ -2,12 +2,12 @@ const { checkSchema } = require("express-validator");
 
 const checkConfirmationPassword = (value, { req }) => {
   if (value !== req.body.password) {
-    throw new Error('Password confirmation does not match password');
+    throw new Error("Password confirmation does not match password");
   }
 
   // Indicates the success of this synchronous custom validator
   return true;
-}
+};
 
 exports.newUser = checkSchema({
   email: {
@@ -15,7 +15,7 @@ exports.newUser = checkSchema({
     isEmail: {
       errorMessage: "Email format is incorrect",
     },
-    normalizeEmail: true
+    normalizeEmail: true,
   },
   name: {
     in: "body",
@@ -23,17 +23,16 @@ exports.newUser = checkSchema({
       errorMessage: "Name should be 5 to 20 characters long",
       options: {
         min: 5,
-        max: 20
-      }
+        max: 20,
+      },
     },
     isAlphanumeric: {
       errorMessage: "Name should contain only en-US alphanumeric characters",
-      options: "en-US"
+      options: "en-US",
     },
     trim: {
-      options: [" "]
+      options: [" "],
     },
-
   },
   password: {
     in: "body",
@@ -44,15 +43,16 @@ exports.newUser = checkSchema({
         minSymbols: 0,
         minNumbers: 0,
         minUppercase: 0,
-        returnScore: false
-      }
-    }
+        returnScore: false,
+      },
+      errorMessage: "Password has to be at least 6 characters long",
+    },
   },
   confirmPassword: {
     in: "body",
     custom: {
       errorMessage: "Passwords don't match",
-      options: checkConfirmationPassword
-    } 
-  }
+      options: checkConfirmationPassword,
+    },
+  },
 });
