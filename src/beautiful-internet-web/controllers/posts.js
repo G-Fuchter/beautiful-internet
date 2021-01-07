@@ -36,7 +36,27 @@ exports.postAddPost = (req, res, next) => {
       res.redirect("/");
     })
     .catch((err) => {
-      next(new Error(err));
+      next(err);
+    });
+};
+
+exports.getPost = (req, res, next) => {
+  const postId = req.params.postId;
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) {
+        const error = new Error("Post not found");
+        error.status = 404;
+        throw error;
+      } else {
+        res.render("post/post", {
+          title: post.title,
+          post,
+        });
+      }
+    })
+    .catch((err) => {
+      next(err);
     });
 };
 

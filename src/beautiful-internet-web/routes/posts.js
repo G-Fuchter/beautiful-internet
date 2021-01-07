@@ -10,4 +10,6 @@ router.get("/add-post", isLogged, postsController.getAddPost);
 
 router.post("/add-post", isLogged, postValidator.newPost, postsController.postAddPost);
 
+router.get("/:postId", postsController.getPost);
+
 module.exports = router;
