@@ -44,7 +44,10 @@ exports.postLoginUser = (req, res, next) => {
 exports.postRegisterUser = (req, res, next) => {
   const { name, email, password } = req.body;
   const errors = validationResult(req);
-  const oldInput = { name, email };
+  const oldInput = { name, email }; req.session.destroy((err) => {
+    console.log(err);
+    res.redirect("/");
+  });
   if (!errors.isEmpty()) {
     let errorMessages = errors.array().map((x) => x.msg);
     return res.status(422).render("user/register", {
@@ -68,4 +71,11 @@ exports.postRegisterUser = (req, res, next) => {
     .then((result) => {
       res.redirect("/users/login");
     });
+};
+
+exports.postLogoutUser = (req, res, next) => {
+  req.session.destroy((error) => {
+    console.log(error);
+    res.redirect("/");
+  });
 };
