@@ -1,4 +1,5 @@
 const { checkSchema } = require("express-validator");
+const User = require("../../models/user");
 
 const checkConfirmationPassword = (value, { req }) => {
   if (value !== req.body.password) {
@@ -9,6 +10,17 @@ const checkConfirmationPassword = (value, { req }) => {
   return true;
 };
 
+const checkIfEmailExists = (value, { req }) => {
+  return User.findOne({ email: value }).then((existingUser) => {
+    if (existingUser !== null) {
+      return Promise.reject("This email has already been used");
+    }
+    else {
+      return true
+    }
+  });
+};
+
 exports.newUser = checkSchema({
   email: {
     in: "body",
@@ -16,6 +28,10 @@ exports.newUser = checkSchema({
       errorMessage: "Email format is incorrect",
     },
     normalizeEmail: true,
+    custom: {
+      errorMessage: "This emails has already been taken",
+      options: checkIfEmailExists,
+    },
   },
   name: {
     in: "body",

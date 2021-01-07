@@ -44,8 +44,8 @@ exports.postLoginUser = (req, res, next) => {
 exports.postRegisterUser = (req, res, next) => {
   const { name, email, password } = req.body;
   const errors = validationResult(req);
+  const oldInput = { name, email };
   if (!errors.isEmpty()) {
-    let oldInput = { name, email };
     let errorMessages = errors.array().map((x) => x.msg);
     return res.status(422).render("user/register", {
       title: "Register",
@@ -54,29 +54,18 @@ exports.postRegisterUser = (req, res, next) => {
     });
   }
 
-  User.findOne({ email })
-    .then((existingUser) => {
-      if (existingUser) {
-        // TODO: ERROR
-        return res.redirect("/users/register");
-      }
-      return bcrypt
-        .hash(password, 12)
-        .then((hashedPassword) => {
-          const newUser = new User({
-            email,
-            password: hashedPassword,
-            name,
-            votes: 0,
-          });
-          return newUser.save();
-        })
-        .then((result) => {
-          res.redirect("/users/login");
-        });
+  bcrypt
+    .hash(password, 12)
+    .then((hashedPassword) => {
+      const newUser = new User({
+        email,
+        password: hashedPassword,
+        name,
+        votes: 0,
+      });
+      return newUser.save();
     })
-    .catch((err) => {
-      console.log(err);
-      res.redirect("/");
+    .then((result) => {
+      res.redirect("/users/login");
     });
 };
